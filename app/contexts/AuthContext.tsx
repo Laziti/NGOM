@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) throw error;
       if (data.user) {
         await fetchUserWithRole(data.user.id);
-        router.push('/');
+        // Redirect will be handled by middleware based on user role
       }
     } catch (error) {
       throw error;
@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (profileError) throw profileError;
         await fetchUserWithRole(data.user.id);
-        router.push('/');
+        // Redirect will be handled by middleware based on user role
       }
     } catch (error) {
       throw error;
