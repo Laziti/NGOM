@@ -26,8 +26,14 @@ export async function middleware(request: NextRequest) {
     const role = userData?.role;
     const path = request.nextUrl.pathname;
 
-    // Redirect from login/register if already authenticated
-    if (path === '/login' || (path === '/register' && role !== 'admin')) {
+    // Redirect from login if already authenticated
+    if (path === '/login') {
+      const dashboardPath = getDashboardPath(role);
+      return NextResponse.redirect(new URL(dashboardPath, request.url));
+    }
+    
+    // Redirect from register if already authenticated (except admin can create new users)
+    if (path === '/register' && role !== 'admin') {
       const dashboardPath = getDashboardPath(role);
       return NextResponse.redirect(new URL(dashboardPath, request.url));
     }

@@ -109,6 +109,7 @@ export default function RegisterPage() {
                 <option value="student">Student</option>
                 <option value="donor">Donor</option>
                 <option value="mentor">Mentor</option>
+                <option value="admin">Admin</option>
               </select>
             </div>
 

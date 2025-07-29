@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { supabaseAdmin } from '../lib/supabase-admin';
 import { createNotification, createNotifications } from './notifications';
 import { UserFormData } from '../components/forms/UserForm';
 
@@ -44,44 +45,21 @@ type DatabaseUser = Omit<User, 'role'> & {
 };
 
 export async function createUser(userData: UserFormData) {
-  // Create auth user
-  const { data: authData, error: authError } = await supabase.auth.signUp({
-    email: userData.email,
-    password: 'temp' + Math.random().toString(36).slice(-8), // Temporary password
+  const response = await fetch('/api/admin/users', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
   });
 
-  if (authError) throw authError;
-  if (!authData.user) throw new Error('User creation failed');
-
-  // Create user profile
-  const { error: profileError } = await supabase.from('users').insert([
-    {
-      id: authData.user.id,
-      email: userData.email,
-      full_name: userData.full_name,
-      phone: userData.phone,
-      gender: userData.gender,
-      role: userData.role,
-    },
-  ]);
-
-  if (profileError) throw profileError;
-
-  // If it's a student, create student profile
-  if (userData.role === 'student' && userData.university) {
-    const { error: studentError } = await supabase.from('students').insert([
-      {
-        user_id: authData.user.id,
-        university: userData.university,
-        about: userData.about,
-        extra_docs: userData.extra_docs,
-      },
-    ]);
-
-    if (studentError) throw studentError;
+  const result = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(result.error || 'Failed to create user');
   }
 
-  return authData.user;
+  return result.user;
 }
 
 export async function updateUser(userId: string, userData: Partial<UserFormData>) {
@@ -112,8 +90,15 @@ export async function updateUser(userId: string, userData: Partial<UserFormData>
 }
 
 export async function deleteUser(userId: string) {
-  const { error } = await supabase.auth.admin.deleteUser(userId);
-  if (error) throw error;
+  const response = await fetch(`/api/admin/users?userId=${userId}`, {
+    method: 'DELETE',
+  });
+
+  const result = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(result.error || 'Failed to delete user');
+  }
 }
 
 export async function getUsers(role?: string) {
