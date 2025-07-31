@@ -15,7 +15,7 @@ export interface DataTableProps<T> {
   actions?: (item: T) => ReactNode;
 }
 
-export default function DataTable<T extends Record<string, any>>({
+export default function DataTable<T extends Record<string, unknown>>({
   columns,
   data,
   onEdit,
@@ -52,7 +52,7 @@ export default function DataTable<T extends Record<string, any>>({
                 >
                   {typeof column.accessor === 'function'
                     ? column.accessor(item)
-                    : item[column.accessor]}
+                    : String(item[column.accessor] ?? '')}
                 </td>
               ))}
               {(onEdit || onDelete || actions) && (

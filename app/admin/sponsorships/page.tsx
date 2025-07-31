@@ -16,12 +16,14 @@ interface Student {
   university: string;
   user: User;
   assigned_donor_id: string | null;
+  [key: string]: unknown;
 }
 
 interface Donor {
   id: string;
   full_name: string;
   email: string;
+  [key: string]: unknown;
 }
 
 export default function AdminSponsorships() {
@@ -40,8 +42,8 @@ export default function AdminSponsorships() {
         getStudentsWithDetails(),
         getUsers('donor'),
       ]);
-      setStudents(studentsData as Student[]);
-      setDonors(donorsData as Donor[]);
+      setStudents(studentsData as unknown as Student[]);
+      setDonors(donorsData as unknown as Donor[]);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {

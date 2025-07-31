@@ -26,6 +26,7 @@ interface Report {
   file_url: string;
   submitted_at: string;
   student: Student;
+  [key: string]: unknown;
 }
 
 interface Receipt {
@@ -33,6 +34,7 @@ interface Receipt {
   file_url: string;
   uploaded_at: string;
   student: Student;
+  [key: string]: unknown;
 }
 
 export default function AdminReports() {

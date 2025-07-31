@@ -19,7 +19,7 @@ export default function StudentReceipts() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<unknown>(null);
   const [amount, setAmount] = useState('');
   const [editingReceipt, setEditingReceipt] = useState<Receipt | null>(null);
 
@@ -69,9 +69,9 @@ export default function StudentReceipts() {
       if (isNaN(amountValue)) throw new Error('Invalid amount');
 
       if (editingReceipt) {
-        await resubmitReceipt(editingReceipt.id, amountValue, selectedFile);
+        await resubmitReceipt(editingReceipt.id, amountValue, selectedFile as File);
       } else {
-        await uploadReceipt(student.id, amountValue, selectedFile);
+        await uploadReceipt(student.id, amountValue, selectedFile as File);
       }
 
       setAmount('');
@@ -152,10 +152,11 @@ export default function StudentReceipts() {
                 Receipt Document
               </label>
               <FileUpload
-                onFileSelect={(file) => setSelectedFile(file)}
-                accept=".pdf,.jpg,.jpeg,.png"
-                maxSize={5}
-                label="Upload Receipt"
+                studentId={user?.id || ''}
+                type="receipt"
+                onUploadComplete={(file) => setSelectedFile(file)}
+                maxSize={5 * 1024 * 1024}
+                acceptedTypes={['.pdf', '.jpg', '.jpeg', '.png']}
               />
             </div>
 

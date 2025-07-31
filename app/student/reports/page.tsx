@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { supabase } from '../../lib/supabase';
 import FileUpload from '@/app/components/common/FileUpload';
 import FileList from '@/app/components/common/FileList';
 import { toast } from 'react-hot-toast';
@@ -9,7 +9,7 @@ import type { FileObject } from '@/app/services/storage';
 
 export default function StudentReportsPage() {
   const [studentId, setStudentId] = useState<string | null>(null);
-  const supabase = createClientComponentClient();
+
 
   useEffect(() => {
     const getUser = async () => {

@@ -14,6 +14,7 @@ interface User {
   phone: string;
   gender: string;
   role: string;
+  [key: string]: unknown;
 }
 
 export default function AdminDashboard() {

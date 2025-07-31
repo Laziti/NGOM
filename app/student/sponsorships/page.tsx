@@ -9,7 +9,7 @@ import { getSponsorshipStatus, SponsorshipStatus } from '@/app/services/students
 export default function StudentSponsorships() {
   const { user } = useAuth();
   const [sponsorships, setSponsorships] = useState<SponsorshipStatus[]>([]);
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -104,17 +104,20 @@ export default function StudentSponsorships() {
         <DashboardCard title="Recent Notifications">
           <div className="space-y-4">
             {notifications.length > 0 ? (
-              notifications.map((notification) => (
+              notifications.map((notification: unknown) => {
+                const notif = notification as { id: string; message: string; created_at: string };
+                return (
                 <div
-                  key={notification.id}
+                  key={notif.id}
                   className="border rounded-lg p-4 space-y-2"
                 >
-                  <p className="text-sm text-gray-900">{notification.message}</p>
+                  <p className="text-sm text-gray-900">{notif.message}</p>
                   <p className="text-xs text-gray-500">
-                    {formatDate(notification.created_at)}
+                    {formatDate(notif.created_at)}
                   </p>
                 </div>
-              ))
+                );
+              })
             ) : (
               <p className="text-gray-500 text-center py-4">
                 No recent notifications

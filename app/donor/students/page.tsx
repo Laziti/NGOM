@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClientComponentClient, type SupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { supabase } from '../../lib/supabase';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import FileList from '@/app/components/common/FileList';
 
 interface Student {
@@ -20,7 +21,7 @@ export default function DonorStudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = createClientComponentClient();
+
 
   useEffect(() => {
     loadSponsoredStudents();
@@ -43,7 +44,7 @@ export default function DonorStudentsPage() {
           )
         `)
         .eq('donor_id', user.id)
-        .eq('status', 'active') as { data: DatabaseResponse[] | null; error: any };
+        .eq('status', 'active') as { data: DatabaseResponse[] | null; error: unknown };
 
       if (error) throw error;
       if (!data) return;

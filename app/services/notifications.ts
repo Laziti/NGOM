@@ -23,6 +23,20 @@ export async function createNotification(
   if (error) throw error;
 }
 
+export async function createNotifications(
+  notifications: Array<{ user_id: string; message: string }>
+): Promise<void> {
+  const notificationData = notifications.map(notif => ({
+    user_id: notif.user_id,
+    message: notif.message,
+    read: false,
+  }));
+
+  const { error } = await supabase.from('notifications').insert(notificationData);
+
+  if (error) throw error;
+}
+
 export async function markNotificationAsRead(notificationId: string): Promise<void> {
   const { error } = await supabase
     .from('notifications')
